@@ -28,4 +28,6 @@ public class LibraryCard {
     private Student student;    //foreign key coloumn of student class
     //child class have unidirectional mapping for sure
 
+
+    
 }

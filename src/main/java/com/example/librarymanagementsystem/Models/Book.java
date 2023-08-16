@@ -23,7 +23,7 @@ public class Book {
     @Column(name="Book_Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name="Book_Title")
+    @Column(unique = true, name="Book_Title")
     private String name;
     private boolean isAvailable;
     @Enumerated(value = EnumType.STRING)
@@ -34,4 +34,11 @@ public class Book {
     @JoinColumn   // join column is used in child class for mapping purpose
     private Author author;
 
+    public Book(String name, boolean isAvailable, Genre genre, Date publishDate, Integer price) {
+        this.name = name;
+        this.isAvailable = isAvailable;
+        this.genre = genre;
+        this.publishDate = publishDate;
+        this.price = price;
+    }
 }

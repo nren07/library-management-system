@@ -6,5 +6,6 @@ public enum CardStatus {
     BLOCKED,
     ISSUED,
     REISSUED,
-    SUSPENDED
+    SUSPENDED,
+    NEW
 }

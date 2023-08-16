@@ -27,4 +27,6 @@ public class Author {
     private String penName;
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)  // by directional mapping between book and author
     List<Book> bookList=new ArrayList<>(); // therefore one author can write many book so we use list here
+
+    
 }

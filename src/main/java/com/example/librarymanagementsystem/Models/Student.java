@@ -33,5 +33,4 @@ public class Student {
     private LibraryCard libraryCard; //this is a child class object
     //this is a bidirectional mapping
 
-
 }
