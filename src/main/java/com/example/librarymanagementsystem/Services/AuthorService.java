@@ -16,4 +16,17 @@ public class AuthorService {
         authorRepository.save(author);
         return "Author is added successfully";
     }
+
+    public Author getAuthorById(Integer authorId) throws Exception{
+        Author author=authorRepository.findById(authorId).get();
+
+        if(author==null) throw new Exception("Author is not found in Db");
+
+        //there is a infinite recursion call in this method because
+        //author contains bookList and bookList contains Author then again author contains booklist and so on 
+        //carefully handle this exception
+        
+
+        return author;
+    }
 }

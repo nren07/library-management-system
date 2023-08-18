@@ -1,13 +1,10 @@
 package com.example.librarymanagementsystem.Controllers;
 
 import com.example.librarymanagementsystem.Models.LibraryCard;
-import com.example.librarymanagementsystem.Repositories.CardRepository;
 import com.example.librarymanagementsystem.Services.CardService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.ExtendedBeanInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +25,13 @@ public class CardController {
     }
 
     @PutMapping("/cardAssign")
-    public ResponseEntity associate(@RequestParam("rollNo")Integer rollNo,@RequestParam("cardNo")Integer cardNo){
+    public ResponseEntity<String> associate(@RequestParam("rollNo")Integer rollNo,@RequestParam("cardNo")Integer cardNo){
         try{
             String result=cardService.associate(rollNo,cardNo);
-            return new ResponseEntity(result,HttpStatus.ACCEPTED);
+            return new ResponseEntity<String>(result,HttpStatus.ACCEPTED);
         }catch(Exception e){
             log.error("student could not be associated {} ",e.getMessage());
-            return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

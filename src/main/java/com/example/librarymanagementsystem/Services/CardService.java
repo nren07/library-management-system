@@ -5,12 +5,8 @@ import com.example.librarymanagementsystem.Models.LibraryCard;
 import com.example.librarymanagementsystem.Models.Student;
 import com.example.librarymanagementsystem.Repositories.CardRepository;
 import com.example.librarymanagementsystem.Repositories.StudentRepository;
-import jakarta.persistence.Enumerated;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service

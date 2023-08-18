@@ -1,5 +1,7 @@
 package com.example.librarymanagementsystem.Services;
 
+import com.example.librarymanagementsystem.Enum.Gender;
+import com.example.librarymanagementsystem.Enum.Genre;
 import com.example.librarymanagementsystem.Models.Author;
 import com.example.librarymanagementsystem.Models.Book;
 import com.example.librarymanagementsystem.Repositories.AuthorRepository;
@@ -16,8 +18,6 @@ public class BookService {
 
     @Autowired
     private AuthorRepository authorRepository;
-    @Autowired
-    private BookRepository bookRepository;
 
     public String addBook(AddBookDto request) throws Exception{
         //some validation
@@ -25,10 +25,11 @@ public class BookService {
         if(!optionalAuthor.isPresent()) throw new Exception("Author id is invalid ");
         Author author=optionalAuthor.get();
         //extract data from request and make an object of book
-        Book book=new Book(request.getName(),request.isAvailable(),request.getGenre(),request.getPublishDate(),request.getPrice());
+        Book book=new Book(request.getName(),true,request.getGenre(),request.getPublishDate(),request.getPrice());
 
         book.setAuthor(author);
         List<Book> list=author.getBookList();
+
         list.add(book);
         author.setBookList(list);
 
@@ -37,5 +38,13 @@ public class BookService {
         authorRepository.save(author);
         return "Book is successfully added ";
 
+    }
+
+    public int getCntBookByGivenGenre(Genre genre){
+        
+
+
+        return 0;
+        
     }
 }

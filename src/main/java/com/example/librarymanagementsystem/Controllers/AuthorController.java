@@ -6,9 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -19,13 +21,22 @@ public class AuthorController {
     private AuthorService authorService;
 
     @PostMapping("/add")
-    public ResponseEntity addAuthor(@RequestBody Author author){
+    public ResponseEntity<String> addAuthor(@RequestBody Author author){
         try{
             String result= authorService.addAuthor(author);
-            return new ResponseEntity(result,HttpStatus.CREATED);
+            return new ResponseEntity<String>(result,HttpStatus.CREATED);
         }catch(Exception e){
             log.error("author could not be added in db {}",e.getMessage());
-        return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/getAuthor")
+    public Author getAuthorById(@RequestParam("authorId")Integer authorId){
+        try{
+            return authorService.getAuthorById(authorId);
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return null;
         }
     }
 }
