@@ -1,5 +1,6 @@
 package com.example.librarymanagementsystem.Services;
 
+import com.example.librarymanagementsystem.BookResponseDto.BookResponseDto;
 import com.example.librarymanagementsystem.Enum.Gender;
 import com.example.librarymanagementsystem.Enum.Genre;
 import com.example.librarymanagementsystem.Models.Author;
@@ -10,6 +11,7 @@ import com.example.librarymanagementsystem.RequestDto.AddBookDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,9 @@ public class BookService {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     public String addBook(AddBookDto request) throws Exception{
         //some validation
@@ -38,6 +43,17 @@ public class BookService {
         authorRepository.save(author);
         return "Book is successfully added ";
 
+    }
+
+    public List<BookResponseDto> getBookListByGenre(Genre genre){
+        List<Book>responceList=bookRepository.findBooksByGenre(genre);
+        List<BookResponseDto>ansList=new ArrayList<>();
+        for(Book book : responceList){
+            BookResponseDto bookResponseDto=new BookResponseDto(book.getName(),book.isAvailable(),book.getGenre(),
+                                                book.getPublishDate(),book.getPrice(),book.getAuthor().getName());
+            ansList.add(bookResponseDto);
+        }
+        return ansList;
     }
 
     public int getCntBookByGivenGenre(Genre genre){

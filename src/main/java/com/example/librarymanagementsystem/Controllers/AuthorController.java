@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/author")
 @Slf4j
@@ -38,5 +40,10 @@ public class AuthorController {
             log.error(e.getMessage());
             return null;
         }
+    }
+    @GetMapping("/getAuthorByAge")
+    public ResponseEntity getAuthorByAge(@RequestParam Integer age){
+        List<Author>authorList=authorService.getAuthorByAge(age);
+        return new ResponseEntity(authorList,HttpStatus.OK);
     }
 }

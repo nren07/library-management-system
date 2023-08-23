@@ -1,9 +1,12 @@
 package com.example.librarymanagementsystem.Services;
 
+import ch.qos.logback.core.rolling.helper.IntegerTokenConverter;
 import com.example.librarymanagementsystem.Models.Author;
 import com.example.librarymanagementsystem.Repositories.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AuthorService {
@@ -28,5 +31,9 @@ public class AuthorService {
         
 
         return author;
+    }
+
+    public List<Author> getAuthorByAge(Integer age){
+        return authorRepository.findAuthorByAge(age);
     }
 }

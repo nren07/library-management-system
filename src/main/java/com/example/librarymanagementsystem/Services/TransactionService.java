@@ -10,12 +10,16 @@ import com.example.librarymanagementsystem.Repositories.BookRepository;
 import com.example.librarymanagementsystem.Repositories.CardRepository;
 import com.example.librarymanagementsystem.Repositories.TransactionRepository;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.apache.el.stream.Optional;
+import org.hibernate.id.IntegralDataTypeHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TransactionService {
@@ -30,6 +34,9 @@ public class TransactionService {
 
     @Value("${book.maxLimit}")
     private Integer maxLimit;
+
+    @Value("${MaxDaysForFine}")
+    private Integer maxDays;
 
     public String issueBookToStudent(int  cardNo,int bookId) throws Exception {
         //validation check
@@ -95,5 +102,43 @@ public class TransactionService {
         return "Book is successfully issued to student.";
     }
 
+    public String returnBook(Integer bookId, Integer cardId) throws Exception{
+        //validation check here
+        if(!bookRepository.existsById(bookId)) throw new Exception("book id is invalid ");
+        if(!cardRepository.existsById(cardId)) throw new Exception("card id is not present");
+
+        Book book=bookRepository.findById(bookId).get();
+        LibraryCard libraryCard=cardRepository.findById(cardId).get();
+
+        List<Transaction>transactions=transactionRepository.transactionsList(bookId,cardId);
+        Transaction latestTransaction=transactions.get(transactions.size()-1); // last transaction is latest transaction
+        Date issueDate=latestTransaction.getCreationDate(); // issuing date
+        long issueTime=Math.abs(System.currentTimeMillis()- issueDate.getTime()); // time in milli seconds
+        long noOfDays= TimeUnit.DAYS.convert(issueTime,TimeUnit.MILLISECONDS);
+
+        int fine=0;
+
+        if(noOfDays>maxDays) fine=(int)((noOfDays-maxDays)*5);
+
+        Transaction transaction=new Transaction(fine,TransactionStatus.SUCCESS,TransactionType.RETURN);
+        book.setAvailable(true);
+        transaction.setBook(book); //since by directional mapping is there so no need to save transaction
+
+        libraryCard.setNoOfIssuedBooks(libraryCard.getNoOfIssuedBooks()-1);
+        transaction.setLibraryCard(libraryCard);
+
+        Transaction newTransactionWitId=transactionRepository.save(transaction);
+
+        book.getTransactionList().add(newTransactionWitId);
+        libraryCard.getTransactionList().add(newTransactionWitId);
+        bookRepository.save(book);
+        cardRepository.save(libraryCard);
+
+        return "Book has successfully been returned";
+    }
+
+    public int getCollectFineInYear(String date){
+        return transactionRepository.totalFine(date);
+    }
 
 }
